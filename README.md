@@ -1,7 +1,7 @@
 IMAGE upload 
 
 <h1>Setting Up DHCP on Windows Server 2022</h1>
-This tutorial outlines the implementation of a Dynamic Host Configuration Protocol (DHCP) server within a Hyper-V Virtual Machine. DHCP is the protocol that leases IPs from a scope of addresses configured in the system. I go over the procedure starting from deployment to validation. I review DHCP's DORA process in obtaining an address from the server to gain a better perspective of how it funcitons behind the scenes. DHCP can be an afterthought for us when we connect our devices to the internet. We rarely think of how this system is done and the expediency it offers to our lives. <br />
+This tutorial outlines the implementation of a Dynamic Host Configuration Protocol (DHCP) server within a Hyper-V Virtual Machine. DHCP is the protocol that leases IPs from a scope of addresses configured in the system. I go over the procedure, starting from deployment to validation. I also review DHCP's DORA process in obtaining an address from the server to gain a better perspective of how it functions behind the scenes. DHCP can be an afterthought for us when we connect our devices to the internet. We rarely think of how this system is done and the expediency it offers to our lives. <br />
 
 <h2>Environments and Technologies Used</h2>
 

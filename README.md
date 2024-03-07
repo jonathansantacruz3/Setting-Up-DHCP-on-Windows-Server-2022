@@ -1,4 +1,4 @@
-![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/3ed624f4-9242-49d9-844d-aeb0400093cc)![Setting Up DHCP on Windows Server 2022](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/0172c924-7185-4008-825a-ff01e0aed0b8)
+![Slide1](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/ba3ee2bb-396d-4c68-98c6-17629582fe8a)
 
 
 <h1>Setting Up DHCP on Windows Server 2022</h1>
@@ -19,10 +19,13 @@ This tutorial outlines the implementation of a Dynamic Host Configuration Protoc
 
 <h2>High-Level Deployment and Configuration Steps</h2>
 
-- Step 1
-- Step 2
-- Step 3
-- Step 4
+- Setup DHCP Role on Server Manager
+- Post DHCP Configuration
+- Setting a DHCP Scope
+- Client DHCP Set Up
+- DORA Process
+- Client DHCP Verification
+- DHCP Server Verification
 
 <h2>Deployment and Configuration Steps</h2>
 
@@ -31,7 +34,6 @@ This tutorial outlines the implementation of a Dynamic Host Configuration Protoc
 For this project, I used Windows Server 2022 and Windows 11 Pro on a virtual machine in Hyper-V. These virtual machines are on a private switch and, therefore isolated from the internet. Windows Server 2022 plays the DHCP server role, while Windows 11 Pro acts as the client receiving an automatic IP address assignment from the server.  The network ID I configured for this network is 192.168.0 /24 using only IPv4 addressing. The scope of the configuration will range from 192.168.0.50-192.168.0.100. 
 
 ![Setting Up DHCP on Windows Server 2022-infrastructure](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/d6c8d872-a3e0-4818-805c-0c01ea273975)
-
 <h3>Setup DHCP Role on Server Manager</h3>
 
 Before setting up the role, I verified my server had a human-readable computer name. I also verified it was in a workgroup environment for file sharing and network connectivity.  Static IP assignments for DHCP servers are essential for consistent, reliable communication, and in this case, I set it up with an IP address of 192.168.0.10 by the name of DNS-IRONMAN. 
@@ -50,11 +52,11 @@ This brings up the Wizard that details the prerequisites I explained earlier. In
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/165a0aca-5585-4e97-bf24-e4cb985220e3)
 
-In the next window, I made sure the computer name and the static IP address are accurate.
+In the next window, I made sure the computer name and the static IP address were accurate.
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/aa5e0b30-1682-41c9-8b70-62d4189d399a)
 
-After pressing next, I selected DHCP server and added the management features.
+After pressing next, I selected the DHCP server and added the management features.
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/56c88e74-9be6-45f6-aa65-1fc9806a467a)
 
@@ -64,12 +66,11 @@ After pressing next, I selected DHCP server and added the management features.
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/aafb855a-1ec0-4be2-9b05-ba0985a6fc45)
 
-In this window, it asks if you would like the system to automatically restart if it needs to update. I didn't check the box because production systems need to stay on for peformance and reliabilty. Then I clicked "Install" to confirm.
+In this window, it asks if you would like the system to automatically restart if it needs to update. I didn't check the box because production systems need to stay on for performance and reliability. Then I clicked "Install" to confirm.
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/69a1f074-4745-4eda-8494-dcf17d281862)
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/999c4e9c-6dfd-450a-8329-c901cf6f3b09)
-
 
 <h3>Post DHCP Configuration</h3>
 
@@ -83,11 +84,11 @@ Once the role finished downloading it appeared as a tab on the left panel of the
 
 <h3>Setting a DHCP Scope</h3>
 
-A scope is the pool of IP addresses utilized by the DHCP server to assign its network devices. Depending on the network, one might want to use the a wide range of IP addresses to support an enterprise or the network might be small and only need a small range. Networks can employ a system where the first 10 addresses can be reserved for vital production devices such as the server, default gateway, switches, access points, etc. This method can streamline any upgrades, changes or troubleshooting to those devices in the future. In this project I decided to use a limited pool of IPs (192.168.0.25-192.168.0.50). I clicked on the DHCP tab on the left panel and right-clicked on the Server DNS-IRONMAN and chose the "DHCP Manager".This opened up a snap-in on the MMC (Microsoft Management Console).
+A scope is the pool of IP addresses utilized by the DHCP server to assign its network devices. Depending on the network, one might want to use a wide range of IP addresses to support an enterprise, or the network might be small and only need a small range. Networks can employ a system where the first 10 addresses can be reserved for vital production devices such as the server, default gateway, switches, access points, etc. This method can streamline any upgrades, changes, or troubleshooting to those devices in the future. In this project, I decided to use a limited pool of IPs (192.168.0.25-192.168.0.50). I right-clicked on the Server DNS-IRONMAN, and chose the "DHCP Manager”. This opened a snap-in on the MMC (Microsoft Management Console).
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/cd5fbe76-a18f-46cd-b196-58573f0fb132)
 
-I clicked on DNS-IRONMAN in the left panel to open up the IPv4 options. I then right-clicked the IPv4 icon and selected the "New Scope" option that brought up the Wizard to start the process. After pressing on the "Next" button, it asked to name the scope to make it easier to identify and an option to add a description. This is useful in large enterprise environments. I named mine "ProjectLAN". 
+I clicked on DNS-IRONMAN in the left panel to open the IPv4 options. I then right-clicked the IPv4 icon and selected the "New Scope" option that brought up the Wizard to start the process. After pressing on the "Next" button, it asked to name the scope to make it easier to identify and an option to add a description. This is useful in large enterprise environments. I named mine "ProjectLAN". 
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/b6e45e31-b2d7-4c94-b77c-11ee0edb7f94)
 
@@ -100,11 +101,11 @@ In the next window, it gave me the opportunity to set any exclusions I might wan
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/4123170b-7a69-4caa-9ea7-dc159bab78f9)
 
-In the next window, I got to set up the duration of the leases on the IP addresses assigned. The default length is 8 hours, but if you were in a library environment, you would want to shorten the timeframe. You wouldn't want to run out of IP addresses quick by leasing IPs longer than needed. This project doesn't require a spcific duration so I left it at its default. 
+In the next window, I got to set up the duration of the leases on the IP addresses assigned. The default length is 8 hours, but if you were in a library environment, you would want to shorten the timeframe. You wouldn't want to run out of IP addresses quickly by leasing IPs longer than needed. This project doesn't require a specific duration, so I left it at its default. 
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/d943f9d4-3019-4239-a14c-093a0101aab4)
 
-After clicking "Next", it asked to set any additional DHCP configuration options such as setting IP addresses for routers, default gateways, DNS servers, or WINS. After choosing to add them, I can set my default gateway and DNS servers. This project is a private network with no access to the internet, however, I just wanted to exhibit the configuration steps for demonstration purposes. 
+After clicking "Next", it asked to set any additional DHCP configuration options such as setting IP addresses for routers, default gateways, DNS servers, or WINS. After choosing to add them, I can set my default gateway and DNS servers. This project is a private network with no access to the Internet, however, I just wanted to exhibit the configuration steps for demonstration purposes. 
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/474c270a-c71e-4c79-8171-2be812cbe226)
 
@@ -112,7 +113,7 @@ After clicking "Next", it asked to set any additional DHCP configuration options
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/bd941722-770c-4c14-bbf7-3e5134170a51)
 
-The WINS (Windows Internet Name Service) is the older brother of DNS and was used in older systems. In this case, I didn't need to configure this step so I clicked on "Next" and chose to activate the scope by pressing "Next" and "Finish". 
+WINS (Windows Internet Name Service) is the older brother of DNS and was used in older systems. In this case, I didn't need to configure this step, so I clicked on "Next" and chose to activate the scope by pressing "Next" and "Finish". 
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/f8040780-4cd9-4deb-b893-68d03098e987)
 
@@ -132,7 +133,7 @@ The MMC gives me a view of the contents, including the address pool, current lea
 
 <h3>Client DHCP Set Up</h3>
 
-I want to set up my client PC to be able to receive an automatic IP address anytime it boots up. I am running a Windows 11 Pro and the first thing I did was click on the Windows logo in the task bar, then went to the "Settings" option with the gear icon. I navigated to "Network and internet" in the left panel and found "Advanced network settings". I went over to the "Ethernet" tab and under "More adapter options", I clicked on "Edit". This brought up a window that gives the option to change IPv4 settings and within that option I chose the two options to "Obtain an IP address automatically" and "Obtain DNS server address automatically" After applying the changes by pressing "OK" I opened up my command line. 
+I want to set up my client PC to be able to receive an automatic IP address anytime it boots up. I ran a Windows 11 Pro and the first thing I did was click on the Windows logo in the taskbar, then went to the "Settings" option with the gear icon. I navigated to "Network and Internet" in the left panel and found "Advanced network settings". I went over to the "Ethernet" tab and under "More adapter options", I clicked on "Edit". This brought up a window that gave the option to change IPv4 settings and within that option, I chose the two options to "Obtain an IP address automatically" and "Obtain DNS server address automatically" and I applied the changes by pressing "OK". 
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/51769f69-5a20-439c-ae51-2328818e0bb9)
 
@@ -144,4 +145,36 @@ I want to set up my client PC to be able to receive an automatic IP address anyt
 
 ![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/c9c853e4-4626-46ed-88df-5cacc8a81827)
 
+<h3>DORA Process</h3>
 
+The process that happens in the background is between the client and the DHCP server. The client PC will send out a broadcast message to the DHCP server and this is called the "Discover" phase. Once the message to the server is reached, the DHCP server will send an "Offer" of an IP address to the client so it can be used in the network. The client will then officially "Request" this IP address to the server and finally the server will then send back an "Acknowledgment" message back to the client. 
+
+![Slide3](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/936d3dbe-c7c6-4c4e-b999-68a361486951)
+
+![Slide4](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/9bcfb222-0df6-4ee1-9eb9-3020a171abbd)
+
+![Slide5](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/dcee9e30-20c8-45ac-a7f5-b763173ff500)
+
+
+![Slide6](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/3523de54-93d8-4d0f-8ca2-1802d1e3a8ce)
+
+<h3>Client DHCP Verification</h3>
+
+I wanted to verify that the DHCP was working properly so I opened the command line. I typed in ipconfig and as expected it displayed the first IP address in the DHCP address pool along with the DNS servers and default gateway I configured in the manager.
+
+![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/bb6c5872-bd31-4fd1-a422-391e6f82d448)
+
+<h3>DHCP Server Verification</h3>
+
+I wanted to validate the settings in my DHCP server, so I opened the DHCP snap-in and under my leases, I was able to verify that the address 192.168.0.25 was leased to my Windows 11 Pro PC for 8 days. 
+
+![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/9235aba0-d28c-4bc1-9d00-77e61c906115)
+
+If I wanted to keep this IP address in reservation for future use indefinitely, I can make use of the feature in the same window by right-clicking the address and selecting "Add to Reservation". This will create an entry in my Reservation tab. 
+
+![image](https://github.com/jonathansantacruz3/Setting-Up-DHCP-on-Windows-Server-2022/assets/151465848/c71ab941-f647-4340-bc28-b5a494ddf781)
+
+
+<h3>Conclusion</h3>
+
+DHCP is a system that can save users in a network a lot of time by automatically assigning IP addresses to traverse other subnets or within its network. It uses the DORA process to assign from a pool of addresses and administrators can add in reservations, exclusions, length of leases, etc. DHCP is just another tool in our arsenal for productivity.  
